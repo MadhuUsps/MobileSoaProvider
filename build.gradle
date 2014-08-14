@@ -1,0 +1,85 @@
+4 // Variables
+ext.mainResourcesDir = "src/main/resources"
+
+apply plugin: "war"
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+String buildNumber = System.env.BUILD_NUMBER
+if (buildNumber) {
+    buildNumber = "." + buildNumber
+}
+else {
+    buildNumber = "";
+}
+version = '3.1' + buildNumber
+
+project.webAppDirName = "web"
+
+sourceSets {
+    integTest.java.srcDir "src/integTest/java"
+    main.java.srcDir "src/main/java"
+    main.resources.srcDir mainResourcesDir
+    test.java.srcDir "src/test/java"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile fileTree(dir: 'lib', include: ['*.jar'])
+    // compile = used during compile and added to war archive "~/WEB-INF/lib"
+    compile 'log4j:log4j:1.2.17'
+    compile 'org.slf4j:slf4j-log4j12:1.7.7'
+    compile 'commons-logging:commons-logging:1.1.3'
+    compile 'aopalliance:aopalliance:1.0'
+    compile 'com.jayway.jsonpath:json-path:0.9.1'
+    compile 'com.jayway.jsonpath:json-path-assert:0.9.1'
+    compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
+    compile 'org.springframework:spring-context:4.0.5.RELEASE'
+    compile 'org.springframework:spring-webmvc:4.0.5.RELEASE'
+    compile 'org.springframework:spring-webmvc-portlet:4.0.5.RELEASE'
+    compile 'org.springframework:spring-orm:4.0.5.RELEASE'
+    compile 'org.springframework:spring-tx:4.0.5.RELEASE'
+    compile 'org.springframework:spring-websocket:4.0.5.RELEASE'
+    compile 'org.jvnet.ws.wadl:wadl-core:1.1.6'
+    compile 'org.jvnet.ws.wadl:wadl-client-plugin:1.1.6'
+    //============================ For @Valid ================================
+    compile 'javax.validation:validation-api:1.1.0.Final'
+    compile 'org.hibernate:hibernate-validator:5.1.1.Final'
+    // runtime = not used during the compile but for the prouduction build, included in the war archive "~/WEB-INF/lib"
+    runtime 'javax.servlet:jstl:1.2'
+    runtime 'com.fasterxml.jackson.core:jackson-core:2.4.1'
+    runtime 'com.fasterxml.jackson.core:jackson-databind:2.4.1'
+    runtime 'javax.xml.bind:jaxb-api:2.2.11'
+    // providedCompile = same as compile but not added to the war archive "~/WEB-INF/lib"
+    providedCompile 'javax.servlet:javax.servlet-api:3.0.1'
+
+    testCompile 'junit:junit:4.+'
+    testCompile 'commons-collections:commons-collections:3.2'
+	testCompile 'org.springframework:spring-test:4.0.5.RELEASE'
+	testCompile 'org.mockito:mockito-all:1.9.5'
+}
+
+war {
+    baseName WAR_BASENAME
+    rootSpec.exclude '**/META-INF/**'
+    
+    // add configs to META-INF
+    metaInf {
+        from(mainResourcesDir + "/META-INF") {
+            include '**'
+            into('')
+        }
+    }
+}
+
+uploadArchives {
+    repositories {
+       flatDir {
+           dirs 'repos'
+       }
+    }
+}

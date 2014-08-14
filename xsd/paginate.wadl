@@ -1,0 +1,30 @@
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://wadl.dev.java.net/2009/02"
+	xsi:schemaLocation="http://wadl.dev.java.net/2009/02">
+	<doc title="SOAUseCaseProvider WADL" />
+	<resources base="http://eagnmnmbd19c.usps.gov:9080/soaPagination_producer">
+		<resource path="/api/paginate">
+			<method id="paginateGet" name="GET">
+				<doc title="PaginateAPIController.paginateGet" />
+				<request>
+					<param name="json" style="query" type="xsd:string" required="true" />
+				</request>
+				<response status="200">
+					<representation mediaType="application/xml" />
+				</response>
+				<response status="200">
+					<representation mediaType="application/json" />
+				</response>
+			</method>
+			<method id="paginatePost" name="POST">
+				<doc title="PaginateAPIController.paginatePost" />
+				<response status="200">
+					<representation mediaType="application/xml" />
+				</response>
+				<response status="200">
+					<representation mediaType="application/json" />
+				</response>
+			</method>
+		</resource>
+	</resources>
+</application>
